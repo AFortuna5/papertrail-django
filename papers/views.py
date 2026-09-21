@@ -37,7 +37,7 @@ class PaperViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    @action(detail=True, methods=["post"], url_path="review")
+    @action(detail=True, methods=["post"], url_path="review", serializer_class=ReviewSerializer)
     def review(self, request, pk=None):
         review, created = review_paper(self.get_object())
         return Response(
@@ -45,7 +45,7 @@ class PaperViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
         )
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["get"], serializer_class=ReviewSerializer)
     def reviews(self, request, pk=None):
         reviews = self.get_object().reviews.all()
         page = self.paginate_queryset(reviews)
