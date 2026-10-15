@@ -22,6 +22,17 @@ Não é um produto da Alenna nem uma aplicação em produção. O objetivo é de
 
 **Limite funcional:** a análise é heurística, síncrona e local. Não há IA, tradução, avaliação científica, Celery, pagamento ou multi-tenancy por organização. Idioma é um metadado; as mesmas regras são aplicadas a ambos os idiomas. O isolamento existente é por usuário.
 
+## Capturas de tela
+
+![Página inicial](docs/screenshots/home.png)
+_Página de apresentação do projeto._
+
+![API navegável de artigos](docs/screenshots/api-papers.png)
+_Listagem de artigos na API navegável do DRF, autenticada como usuário demo._
+
+![Histórico de revisões](docs/screenshots/api-review.png)
+_Revisões de um artigo com métricas e achados da análise textual._
+
 ## Executar no Windows / PyCharm
 
 Requer Python 3.12 ou superior. No terminal, dentro da pasta do projeto:
