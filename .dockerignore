@@ -1,0 +1,16 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+*.sqlite3
+.env
+staticfiles
+media
+.idea
+.vscode
+.github
+.coverage
+htmlcov
+coverage.xml
+.ruff_cache

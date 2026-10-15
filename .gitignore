@@ -9,3 +9,5 @@ coverage.xml
 .ruff_cache/
 .idea/
 staticfiles/
+media/
+*.log

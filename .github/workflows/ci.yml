@@ -20,6 +20,8 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
+      DJANGO_DEBUG: "true"
+      DJANGO_SECRET_KEY: ci-only
       POSTGRES_DB: ${{ matrix.database == 'postgres' && 'papertrail' || '' }}
       POSTGRES_USER: papertrail
       POSTGRES_PASSWORD: ci-only-password

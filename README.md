@@ -1,5 +1,7 @@
 # PaperTrail
 
+[![Django checks](https://github.com/AFortuna5/papertrail-django/actions/workflows/ci.yml/badge.svg)](https://github.com/AFortuna5/papertrail-django/actions/workflows/ci.yml)
+
 **API para organizar artigos e revisar a escrita de resumos científicos, construída com Python, Django e Django REST Framework.**
 
 Projeto de portfólio de Arthur, com escopo pequeno e funcional: autenticação, CRUD com isolamento por usuário, análise textual determinística e histórico persistido. A interface inicial usa Django Templates; a API navegável do DRF permite experimentar os endpoints sem um frontend separado.
@@ -126,11 +128,43 @@ templates/home.html     apresentação com Django Templates
 .\.venv\Scripts\python.exe -m coverage report
 ```
 
-Os testes cobrem isolamento entre usuários em cada ação, falsificação de proprietário, validação, CRUD, busca/paginação, login/logout, limitação de tentativas, histórico, deduplicação e regras textuais. A CI exige pelo menos 85% de cobertura do app e verifica SQLite e PostgreSQL. `requirements.lock` fixa as versões instaladas; `requirements.txt` registra os intervalos para atualização deliberada.
+Os testes cobrem isolamento entre usuários em cada ação, falsificação de proprietário, validação, CRUD, busca/paginação, login/logout, limitação de tentativas, histórico, deduplicação e regras textuais. A CI exige pelo menos 85% de cobertura do app e verifica SQLite e PostgreSQL. `requirements.lock` fixa as versões instaladas; `requirements.txt` registra os intervalos de produção para atualização deliberada e `requirements-dev.txt` adiciona coverage e ruff.
 
 ## PostgreSQL
 
 Crie um banco e um usuário PostgreSQL com permissão de acesso. Defina `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST` e `POSTGRES_PORT` no `.env`, conforme o exemplo, e execute `manage.py migrate`. Sem `POSTGRES_DB`, o projeto usa SQLite. Para rodar testes no PostgreSQL, o usuário de testes precisa poder criar o banco temporário.
+
+## Executar com Docker
+
+Com Docker e Docker Compose instalados:
+
+```bash
+cp .env.example .env   # ajuste DJANGO_SECRET_KEY e POSTGRES_*
+docker compose up --build
+```
+
+O compose sobe o PostgreSQL 16 e a aplicação com gunicorn em `http://localhost:8000/`, injetando `POSTGRES_HOST=db`. As migrations rodam automaticamente na inicialização do contêiner. Para criar um usuário administrador:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+## Deploy
+
+Em produção, defina ao menos:
+
+- `DJANGO_SECRET_KEY`: chave gerada e exclusiva do ambiente (obrigatória com `DJANGO_DEBUG=false`).
+- `DJANGO_DEBUG=false` (este já é o padrão quando a variável não está definida).
+- `DJANGO_ALLOWED_HOSTS`: domínios do serviço, separados por vírgula.
+- `DJANGO_CSRF_TRUSTED_ORIGINS`: origens completas com esquema (ex.: `https://app.exemplo.com`).
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, `POSTGRES_PORT`: banco PostgreSQL gerenciado.
+- `DJANGO_SECURE_SSL_REDIRECT`: o padrão é redirecionar para HTTPS; use `false` apenas se o TLS terminar em outra camada sem proxy reverso configurado.
+
+Com `DJANGO_DEBUG=false`, o projeto ativa cookies seguros, HSTS e redirecionamento HTTPS, e serve os arquivos estáticos via WhiteNoise após `collectstatic` (executado no build da imagem).
+
+## Licença
+
+Distribuído sob a licença MIT; consulte `LICENSE`.
 
 ## Limites e evolução
 
