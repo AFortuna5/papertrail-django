@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
-DEBUG = os.getenv("DJANGO_DEBUG", "false").lower() == "true"
+DEBUG = (os.getenv("DJANGO_DEBUG") or "false").lower() == "true"
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "local-development-only-do-not-deploy")
 if not DEBUG and SECRET_KEY == "local-development-only-do-not-deploy":
     raise ImproperlyConfigured("Defina DJANGO_SECRET_KEY antes de desativar DEBUG.")
@@ -110,8 +110,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 X_FRAME_OPTIONS = "DENY"
 SECURE_SSL_REDIRECT = (
-    os.getenv("DJANGO_SECURE_SSL_REDIRECT", "false" if DEBUG else "true").lower() == "true"
-)
+    os.getenv("DJANGO_SECURE_SSL_REDIRECT") or ("false" if DEBUG else "true")
+).lower() == "true"
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

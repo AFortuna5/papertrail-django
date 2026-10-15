@@ -139,9 +139,14 @@ Crie um banco e um usuário PostgreSQL com permissão de acesso. Defina `POSTGRE
 Com Docker e Docker Compose instalados:
 
 ```bash
-cp .env.example .env   # ajuste DJANGO_SECRET_KEY e POSTGRES_*
+cp .env.example .env
 docker compose up --build
 ```
+
+Antes de subir, edite o `.env`: defina `DJANGO_SECRET_KEY`, `POSTGRES_PASSWORD` (e o
+par `POSTGRES_DB`/`POSTGRES_USER`), `DJANGO_DEBUG=false` e
+`DJANGO_SECURE_SSL_REDIRECT=false` (o compose local não tem TLS; sem isso o app
+redireciona para HTTPS e a página não abre).
 
 O compose sobe o PostgreSQL 16 e a aplicação com gunicorn em `http://localhost:8000/`, injetando `POSTGRES_HOST=db`. As migrations rodam automaticamente na inicialização do contêiner. Para criar um usuário administrador:
 
